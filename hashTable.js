@@ -17,9 +17,14 @@ function hashStringToInt(s, tableSize) {
 
 class HashTable {
   // table = new Array(100);
-  table = new Array(3);
+  //   table = new Array(3);
+  table = new Array(2001);
+  numItems = 0;
+  loadFactor = this.numItems / this.table.length;
 
   setItem = (key, value) => {
+    this.numItems++;
+    const loadFactor = this.numItems / this.table.length;
     const idx = hashStringToInt(key, this.table.length);
     if (this.table[idx]) {
       this.table[idx].push([key, value]);
@@ -37,6 +42,7 @@ class HashTable {
     }
 
     // return this.table[idx];
+    // O(n)
     return this.table[idx].find((x) => x[0] === key)[1];
   };
 }
@@ -48,6 +54,9 @@ myTable.setItem("lastName", "tim");
 myTable.setItem("age", "5");
 myTable.setItem("dob", "1/2/3");
 // console.log(myTable.table);
+console.log(myTable.table[0]);
 
 console.log(myTable.getItem("firstName"));
 console.log(myTable.getItem("lastName"));
+console.log(myTable.getItem("age"));
+console.log(myTable.getItem("dob"));
