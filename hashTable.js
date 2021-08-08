@@ -18,13 +18,39 @@ function hashStringToInt(s, tableSize) {
 class HashTable {
   // table = new Array(100);
   //   table = new Array(3);
-  table = new Array(2001);
+  table = new Array(3);
+
   numItems = 0;
+
+  resize = () => {
+    const newTable = new Array(this.table.length * 2);
+    this.table.forEach((item) => {
+      if (item) {
+        item.forEach(([key, value]) => {
+          const idx = hashStringToInt(key, newTable.length);
+          if (newTable[idx]) {
+            newTable[idx].push([key, value]);
+          } else {
+            // this.table[idx] = value;
+            newTable[idx] = [[key, value]];
+          }
+        });
+      }
+    });
+    this.table = newTable;
+  };
+
   loadFactor = this.numItems / this.table.length;
 
   setItem = (key, value) => {
     this.numItems++;
     const loadFactor = this.numItems / this.table.length;
+    if (loadFactor > 0.8) {
+      // resize
+      //   console.log("resize happening");
+      this.resize();
+    }
+
     const idx = hashStringToInt(key, this.table.length);
     if (this.table[idx]) {
       this.table[idx].push([key, value]);
@@ -49,13 +75,16 @@ class HashTable {
 
 const myTable = new HashTable();
 myTable.setItem("firstName", "bob");
+// console.log(myTable.table.length);
 // myTable.getItem("firstName");
 myTable.setItem("lastName", "tim");
+// console.log(myTable.table.length);
 myTable.setItem("age", "5");
+// console.log(myTable.table.length);
 myTable.setItem("dob", "1/2/3");
 // console.log(myTable.table);
-console.log(myTable.table[0]);
-
+// console.log(myTable.table[0]);
+// console.log(myTable.table.length);
 console.log(myTable.getItem("firstName"));
 console.log(myTable.getItem("lastName"));
 console.log(myTable.getItem("age"));
